@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE PIECE MINIGAME</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <!-- Imagem que será movida -->
+    <img id="imagem" src="sunny.png" alt="Sunny">
+    <img id="imagem2" src="zoro.png" alt="Zoro">
+    <img id="imagem3" src="luffy.png" alt="Luffy">
+    <img id="imagem4" src="nami.png" alt="Nami">
+    <img id="imagem5" src="usopp.png" alt="Usopp">
+    <img id="imagem6" src="sanji.png" alt="Sanji">
+    <img id="imagem7" src="chopper.png" alt="Chopper">
+    <img id="imagem8" src="robin.png" alt="Robin">
+    <img id="imagem9" src="brook.png" alt="Brook">
+    <img id="imagem10" src="jinbei.png" alt="Jinbei">
+    <img id="imagem11" src="franky.png" alt="Franky">
+
+    <!-- Tela de parabéns -->
+    <div id="parabens">
+        <div>
+        <h1>PARABÉNS!</h1>
+        <p>Você reuniu todos <br>
+            os chapéu de palha!
+        </p>
+        <!-- Adicionando o botão -->
+        <a href="viloes.html" class="botao">PRÓXIMA FASE</a>
+         </div>
+        <div>
+        <img class="bau" src="bau.png">
+        </div>
+    </div>
+
+<script>
+    // Obtém a referência para a imagem
+    var imagem = document.getElementById('imagem');
+    var imagensItens = document.querySelectorAll('img[id^="imagem"]:not(#imagem)');
+    var parabens = document.getElementById('parabens');
+    
+    // Define as coordenadas iniciais da imagem
+    var posX = 50;
+    var posY = 50;
+
+// Definindo a sequência correta de captura das imagens
+var sequenciaCorreta = [3, 2, 4, 5, 6, 7, 8, 11, 9, 10];
+var proximaImagem = 0; // Índice da próxima imagem a ser capturada
+    
+   // Função para verificar se a captura está seguindo a sequência correta
+function verificarSequenciaCorreta(imagemId) {
+    // Obtém o número da imagem atual
+    var numeroImagem = parseInt(imagemId.replace('imagem', ''));
+    
+    // Verifica se a imagem capturada é a próxima na sequência
+    if (numeroImagem === sequenciaCorreta[proximaImagem]) {
+        // Se for a próxima na sequência, atualiza a próxima imagem
+        proximaImagem++;
+        return true;
+    } else {
+        // Verifica se a imagem capturada está na lista de imagens capturadas anteriormente
+        if (sequenciaCorreta.includes(numeroImagem)) {
+            // Se a imagem já foi capturada anteriormente, não permite a captura
+            return false;
+        } else {
+            // Se a imagem não foi capturada anteriormente, permite a captura (para voltar atrás)
+            return true;
+        }
+    }
+}
+
+    // Função para verificar se houve colisão entre duas imagens
+    function verificarColisao(imagem1, imagem2) {
+        var ret1 = imagem1.getBoundingClientRect();
+        var ret2 = imagem2.getBoundingClientRect();
+
+        return !(ret2.left > ret1.right || 
+                 ret2.right < ret1.left || 
+                 ret2.top > ret1.bottom ||
+                 ret2.bottom < ret1.top);
+    }
+
+    // Função para mover a imagem e capturar outras imagens
+    function moverImagem(event) {
+        // Verifica qual tecla foi pressionada
+        switch(event.keyCode) {
+            case 37: // seta para a esquerda
+                if (posX > 0) {
+                    posX -= 10;
+                }
+                break;
+            case 38: // seta para cima
+                if (posY > 0) {
+                    posY -= 10;
+                }
+                break;
+            case 39: // seta para a direita
+                if (posX < window.innerWidth - imagem.width) {
+                    posX += 10;
+                }
+                break;
+            case 40: // seta para baixo
+                if (posY < window.innerHeight - imagem.height) {
+                    posY += 10;
+                }
+                break;
+        }
+        
+        // Atualiza a posição da imagem
+        imagem.style.left = posX + 'px';
+        imagem.style.top = posY + 'px';
+
+        // Verifica se houve colisão entre "sunny" e os outros itens
+        imagensItens.forEach(function(item) {
+            if (item.style.display !== 'none' && verificarColisao(imagem, item)) {
+                // Verifica se a captura está seguindo a sequência correta
+                if (verificarSequenciaCorreta(item.id)) {
+                    // Se a captura estiver correta, oculta o item
+                    item.style.display = 'none';
+                }
+            }
+        });
+
+        // Verifica se todas as imagens foram capturadas
+        var todasCapturadas = true;
+        imagensItens.forEach(function(item) {
+            if (item.style.display !== 'none') {
+                todasCapturadas = false;
+            }
+        });
+
+        // Se todas as imagens foram capturadas, exibe a tela de parabéns
+        if (todasCapturadas) {
+            parabens.style.display = 'block';
+        }
+    }
+    
+    // Adiciona um event listener para capturar os eventos de teclado
+    window.addEventListener('keydown', moverImagem);
+
+    // Esconde a mensagem de parabéns no início do jogo
+    parabens.style.display = 'none';
+
+</script>
+</body>
+</html>
