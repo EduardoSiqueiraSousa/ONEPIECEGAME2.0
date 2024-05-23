@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VILOES</title>
+    <link rel="stylesheet" type="text/css" href="style2.css">
+</head>
+<body>
+    <!-- Imagem do Sunny -->
+    <img id="sunny" src="sunny.png" alt="Sunny">
+
+    <!-- Imagens alvo -->
+        <!-- Imagens alvo -->
+        <img id="alvo" class="alvo" src="crocodile.png" alt="Alvo">
+        <img id="alvo2" class="alvo" src="enel.png" alt="Alvo2">
+        <img id="alvo3" class="alvo" src="doflamingo.png" alt="Alvo3">
+        <img id="alvo4" class="alvo" src="lucci.png" alt="Alvo4">
+        <img id="alvo5" class="alvo" src="bigmom.png" alt="Alvo5">
+        <img id="alvo6" class="alvo" src="kaido.png" alt="Alvo6">
+        <img id="alvo7" class="alvo" src="katakuri.png" alt="Alvo7">
+        <img id="alvo8" class="alvo" src="buggy.png" alt="Alvo8">
+        <img id="alvo9" class="alvo" src="teatch.png" alt="Alvo9">
+        <img id="alvo10" class="alvo" src="arlong.png" alt="Alvo10">
+        <img id="alvo11" class="alvo" src="akainu.png" alt="Alvo11">
+        <img id="alvo12" class="alvo" src="kizaru.png" alt="Alvo12">
+        <img id="alvo13" class="alvo" src="aokiji.png" alt="Alvo13">
+        <img id="alvo14" class="alvo" src="smoke.png" alt="Alvo14">
+        <img id="alvo15" class="alvo" src="judge.png" alt="Alvo15">
+        <img id="alvo16" class="alvo" src="moriah.png" alt="Alvo16">
+        <img id="alvo17" class="alvo" src="caesar.png" alt="Alvo17">
+
+     <script>
+        // Variáveis para armazenar a posição do Sunny
+        var posicaoSunnyX = 50; // Posição inicial em X
+        var posicaoSunnyY = window.innerHeight / 2; // Posição inicial em Y
+
+        document.addEventListener('keydown', function(event) {
+            // Verifica qual tecla foi pressionada
+            switch(event.code) {
+                case 'ArrowUp':
+                    moveSunny('up');
+                    break;
+                case 'ArrowDown':
+                    moveSunny('down');
+                    break;
+                case 'ArrowLeft':
+                    moveSunny('left');
+                    break;
+                case 'ArrowRight':
+                    moveSunny('right');
+                    break;
+                case 'Space':
+                    atirarBolinha();
+                    break;
+            }
+        });
+
+        function moveSunny(direction) {
+            // Define a velocidade de movimento
+            var velocidade = 10;
+
+            // Move o Sunny na direção correspondente
+            switch(direction) {
+                case 'up':
+                    if (posicaoSunnyY > 0) {
+                        posicaoSunnyY -= velocidade;
+                    }
+                    break;
+                case 'down':
+                    if (posicaoSunnyY < window.innerHeight - document.getElementById('sunny').offsetHeight) {
+                        posicaoSunnyY += velocidade;
+                    }
+                    break;
+                case 'left':
+                    if (posicaoSunnyX > 0) {
+                        posicaoSunnyX -= velocidade;
+                    }
+                    break;
+                case 'right':
+                    if (posicaoSunnyX < window.innerWidth - document.getElementById('sunny').offsetWidth) {
+                        posicaoSunnyX += velocidade;
+                    }
+                    break;
+            }
+
+            // Atualiza a posição do Sunny
+            document.getElementById('sunny').style.top = posicaoSunnyY + 'px';
+            document.getElementById('sunny').style.left = posicaoSunnyX + 'px';
+        }
+
+        function atirarBolinha() {
+            var bolinha = document.createElement('div');
+            bolinha.className = 'bolinha';
+            document.body.appendChild(bolinha);
+
+            var posicaoX = document.getElementById('sunny').getBoundingClientRect().right; // Posição inicial da bolinha em relação ao Sunny
+            var posicaoY = document.getElementById('sunny').getBoundingClientRect().top + 50; // Posição inicial da bolinha em relação ao topo da tela
+            bolinha.style.left = posicaoX + 'px';
+            bolinha.style.top = posicaoY + 'px';
+
+            var intervalo = setInterval(function() {
+                posicaoX += 5; // Ajuste a velocidade do movimento horizontal
+                bolinha.style.left = posicaoX + 'px';
+
+                // Verifica se a bolinha atingiu a borda da tela
+                if (posicaoX >= window.innerWidth) {
+                    bolinha.remove(); // Remove a bolinha
+                    clearInterval(intervalo); // Para o movimento da bolinha
+                }
+
+                // Verifica colisão com os alvos
+                var alvos = document.querySelectorAll('.alvo');
+                for (var i = 0; i < alvos.length; i++) {
+                    var alvo = alvos[i];
+                    var retBolinha = bolinha.getBoundingClientRect();
+                    var retAlvo = alvo.getBoundingClientRect();
+                    if (retBolinha.right >= retAlvo.left && retBolinha.left <= retAlvo.right && retBolinha.top <= retAlvo.bottom && retBolinha.bottom >= retAlvo.top) {
+                        alvo.remove(); // Remove o alvo
+                        bolinha.remove(); // Remove a bolinha
+                        clearInterval(intervalo); // Para o movimento da bolinha
+                        break; // Sair do loop após a primeira colisão
+                    }
+                }
+            }, 7); // Ajuste o intervalo de tempo conforme necessário
+        }
+        
+    </script>
+</body>
+</html>
