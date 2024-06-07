@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url("marxd.png"); /* substitua pelo caminho da sua imagem */
+    background-image: url("../img/marxd.png"); /* substitua pelo caminho da sua imagem */
     background-size: cover; /* para cobrir toda a área */
     color: white; /* cor do texto para melhorar a legibilidade */
 }   
